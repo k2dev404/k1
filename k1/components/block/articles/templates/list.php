@@ -1,0 +1,1 @@
+<a href="/articles/1.html">Первая статья</a>
