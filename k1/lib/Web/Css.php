@@ -58,6 +58,42 @@ class Css
         return $result;
     }
 
+    public static function replaceUrls($url, $quote, $path): string
+    {
+        if (mb_strpos($url, '://') !== false || mb_strpos($url, 'data:') !== false || mb_substr($url, 0, 1) == '#') {
+            return $quote . $url . $quote;
+        }
+
+        $url = trim(stripslashes($url), "'\" \r\n\t");
+        if (mb_substr($url, 0, 1) == '/') {
+            return $quote . $url . $quote;
+        }
+
+        return $quote . $path . '/' . $url . $quote;
+    }
+
+    private function getFixedIncludes($path, $content): string
+    {
+
+        $path = dirname($path);
+
+        $result = preg_replace_callback('#([;\s:]*(?:url|@import)\s*\(\s*)(\'|"|)(.+?)(\2)\s*\)#is',
+            function ($matches) use ($path) {
+                return $matches[1] . $this->replaceUrls($matches[3], $matches[2], addslashes($path)) . ')';
+            },
+            $content
+        );
+
+        $result = preg_replace_callback('#(\s*@import\s*)([\'"])([^\'"]+)(\2)#is',
+            function ($matches) use ($path) {
+                return $matches[1] . $this->replaceUrls($matches[3], $matches[2], addslashes($path));
+            },
+            $content
+        );
+
+        return $result;
+    }
+
     /**
      * @throws SystemException
      */
@@ -65,7 +101,7 @@ class Css
     {
         $root = Application::getDocumentRoot();
 
-        $hex = '';
+        $hex = $path;
         foreach ($this->data['file'] as $item) {
             $hex .= filemtime($root . $item);
             $hex .= $item;
@@ -97,7 +133,7 @@ class Css
 
                 $content = file_get_contents($root . $item);
 
-                $result[] = $content;
+                $result[] = $this->getFixedIncludes($item, $content);
                 $result[] = '';
             }
 

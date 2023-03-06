@@ -6,7 +6,8 @@
  */
 
 $app->setProp('title', 'NEWS');
-$app->addCss('/assets/css/bootstrap.css');
+//$app->addCss('/assets/css/bootstrap.css');
+$app->addCss('/assets/css/block/block.css');
 $app->addJs('/assets/js/jquery-3.6.0.js');
 
 if (!empty($result['id'])) {
