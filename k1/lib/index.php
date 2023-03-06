@@ -3,10 +3,6 @@
 use K1\System\Application;
 use K1\System\Config;
 use K1\System\ErrorHandler;
-use K1\System\Exceptions\SystemException;
-
-include_once 'function.php';
-//include_once realpath(dirname(__FILE__) . '/..') . '/vendor/autoload.php';
 
 spl_autoload_register(function ($class) {
     $class = str_replace(['K1\\', '\\'], ['', '/'], $class);
@@ -20,11 +16,18 @@ spl_autoload_register(function ($class) {
 
 $app = Application::getInstance();
 $error = new ErrorHandler();
+$root = Application::getDocumentRoot();
 
 try {
     ob_start();
-    Config::load(Application::getDocumentRoot() . '/k1/config.php');
+    Config::load($root . '/k1/config.php');
     $error->init();
+
+    $dev = $root . '/k1/dev/index.php';
+
+    if (file_exists($dev)) {
+        include_once $dev;
+    }
 } catch (Exception $e) {
     $error->handleException($e);
 }

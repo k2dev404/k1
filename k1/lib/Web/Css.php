@@ -58,6 +58,9 @@ class Css
         return $result;
     }
 
+    /**
+     * @throws SystemException
+     */
     private function glue(string $path): string
     {
         $root = Application::getDocumentRoot();

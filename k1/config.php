@@ -34,7 +34,6 @@ return [
         'debug' => true,
         'error_reporting' => E_ALL,
         'log' => false
-    ],
-    'design' => 'design/inside'
+    ]
 ];
 

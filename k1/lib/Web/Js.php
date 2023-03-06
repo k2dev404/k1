@@ -39,6 +39,9 @@ class Js
         $this->data['file'][] = $path;
     }
 
+    /**
+     * @throws SystemException
+     */
     public function get(string $path = ''): string
     {
         $result = '';

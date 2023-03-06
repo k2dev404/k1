@@ -4,3 +4,5 @@
 /assets
 /k1/log/*
 /k1/cache/*
+/.phpdoc/
+/phpDocumentor.phar
